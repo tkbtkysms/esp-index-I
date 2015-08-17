@@ -23,12 +23,12 @@ To search location of queries, please use the below command.
   
     $./search -i index_file -q query_file -m locate
 
-An Example of query_file are esp-index-I/query/query.  
+An example of query_file are esp-index-I/query/query.  
 To extract substrings of arbitrary position, please use the below command.
 
     $./extract -i index_file -p position_file
 
-Examples of position_file are esp-index-I/query/position.  
+An example of position_file are esp-index-I/query/position.  
 To decompress an index to an input text, please use the below command.
 
     $./decompress -i index_file -o output_text_file
