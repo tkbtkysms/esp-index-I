@@ -1,10 +1,10 @@
 # esp-index-I  
 esp-index-I is a C++ implementation of improved ESP-index[1].  
 ESP-index[2] is a grammar based self-index for large scale and highly repetitive texts.  
-Using rank/select dictionary for bit array[3] and large alphabets (GMR)[4],
+Using rank/select dictionaries for bit array[3] and large alphabets (GMR)[4],
 imporved ESP-index improves query search time of ESP-index.
 Especially, long query search time of improved ESP-index is faster than other grammar based self indexes.  
-esp-index-I uses [RSDic](https://code.google.com/p/rsdic/) as a rank/select dictionary for bit array
+esp-index-I uses [RSDic](https://code.google.com/p/rsdic/) as a rank/select dictionary for a bit array
 and a self implementation as GMR.
 
 #Quick Start
