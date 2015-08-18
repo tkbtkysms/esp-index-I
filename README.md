@@ -82,5 +82,5 @@ A compressed index based on edit-sensitive parsing. J. Discrete Algorithms 18:
 [3]  Gonzalo Navarro, Eliana Providel: Fast, Small, Simple Rank/Select on Bitmaps.  
 SEA 2012: 295-306
 
-[4] Alexander Golynski, J. Ian Munro, S. Srinivasa Rao:Rank/select operations on  
+[4] Alexander Golynski, J. Ian Munro, S. Srinivasa Rao: Rank/select operations on  
 large alphabets: a tool for text indexing. SODA 2006: 368-373  
