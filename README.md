@@ -8,7 +8,7 @@ esp-index-I uses [RSDic](https://code.google.com/p/rsdic/) as a rank/select dict
 and a self implementation as GMR.
 
 #Quick Start
-    $cd src  
+    $cd esp-index-I/src  
     $make
 
 To build an index from an input text, please use the below command.  
