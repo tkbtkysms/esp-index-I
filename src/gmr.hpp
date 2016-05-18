@@ -40,6 +40,10 @@ public:
       + perm_.ByteSize()
       + sizeof(uint64_t);
   }
+  void     Clear(){
+    b_.Clear();
+    perm_.Clear();
+  }
 private:
   int Compare(const uint64_t kIndex1,
 	       const uint64_t kIndex2,

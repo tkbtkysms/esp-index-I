@@ -27,6 +27,7 @@ void ESPTree::Init(const uint64_t kReserveLength){
   
   pdict_.Init(reserve_length);
   rpdict_.Init(reserve_length);
+  char_map_.Init();
 }
 
 void ESPTree::Build(ifstream &ifs){
@@ -86,6 +87,7 @@ void ESPTree::Build(ifstream &ifs){
 			1);
 
     perm_index->Clear();
+    delete perm_index;
     rpdict_.Clear(pdict_);
     pdict_.SetOffset();
   }
@@ -143,6 +145,8 @@ void ESPTree::DiskBuild(ifstream &ifs, const uint64_t kInputSpace){
       input_buffer_pos_ = 0;
       next_level_len_ = 0;
       remaining_len_ = read_length;
+      
+      
       
       while(remaining_len_ > 5){
 	if(IsPair(input_buffer_, 
@@ -222,10 +226,10 @@ void ESPTree::DiskBuild(ifstream &ifs, const uint64_t kInputSpace){
 void ESPTree::ReadInputText(ifstream &ifs, const uint64_t kLen){
   
   vector<char> char_buffer;
-  uint64_t read_length;
-  uint64_t total_read_length;
-  uint64_t input_buffer_pos;
-  uint64_t input_length;
+  uint64_t read_length = 0;;
+  uint64_t total_read_length = 0;
+  uint64_t input_buffer_pos = 0;
+  uint64_t input_length = 0;
   
   if(kLen == DUMMYCODE){
     read_length = 10 * TRANSMB;
@@ -310,7 +314,7 @@ void ESPTree::ReadInputText(ifstream &ifs, const uint64_t kLen){
 
 void ESPTree::Build2Tree(){
   uint64_t var,left, right;
-
+  
   var = rpdict_.ReverseAccessToPRule(pdict_,
 				     (left = input_buffer_[input_buffer_pos_]), 
 				     (right  = input_buffer_[input_buffer_pos_ + 1]));
@@ -453,9 +457,9 @@ PRule ESPTree::GetPRule(const uint64_t kIndex){
 void ESPTree::Clear(){
   
   pdict_.Clear();
-  vector<uint64_t> ().swap(extraction_length_);
   rpdict_.Delete();
-  char_map_.Clear();
+  vector<uint64_t> ().swap(extraction_length_);
+  vector<uint64_t> ().swap(input_buffer_);
   root_ = 0;
   
 }

@@ -1,6 +1,5 @@
-
 CXX = g++
-CXXFLAGS = -O3 -W -Wall -I.
+CXXFLAGS = -std=c++11 -O3 -W -Wall -I.
 LINKFLAGS = -lm
 
 RSDIC =\
@@ -53,7 +52,7 @@ extract:  $(OBJRSDIC) $(OBJS1) $(OBJS5)
 	$(CXX) $(CXXFLAGS) $(OBJRSDIC) $(OBJS1) $(OBJS5) $(LINKFLAGS) -o extract $(LIB)
 
 debug:
-	make all CXXFLAGS="-ggdb -W -Wall -pedantic -I./libcds/include"
+	make all CXXFLAGS="-O0 -std=c++11 -ggdb -W -Wall -pedantic -I."
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $<

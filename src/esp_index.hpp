@@ -40,6 +40,14 @@ public:
 	      level_(),
 	      char_map_(){}
   ~ESPIndex() {}
+  void Clear(){
+    left_.Clear();
+    right_.Clear();
+    sparse_bit_.Clear();
+    extraction_length_.Clear();
+    offset_.Clear();
+    char_map_.Clear();
+  }
   void Build(ESPTree &est_tree,
 	     const uint32_t kPositionRatio,
 	     std::ofstream &ofs);

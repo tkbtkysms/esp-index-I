@@ -86,7 +86,9 @@ Permutation *PDict::Sort(){
   for(size_t i = 0; i < array_size ; i++){
     SetPRule(i + offset(offset_length() - 1), tmp_prules[i]);
   }
-    
+  
+  vector<PRule> (tmp_prules).swap(tmp_prules);
+  
   return perm_index;
 }
   

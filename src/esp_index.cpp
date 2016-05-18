@@ -43,7 +43,7 @@ void ESPIndex::Build(ESPTree &esp_tree,
   
   Save(ofs);
   ofs.close();
-
+  Clear();
 }
 
 void ESPIndex::SetOffset(ESPTree &esp_tree){

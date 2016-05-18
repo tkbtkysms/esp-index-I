@@ -242,8 +242,7 @@ public:
   void Clear(){
     length_ = 0;
     bits_per_code_ = 0;
-    data_.clear();
-    std::vector<uint64_t> (data_).swap(data_);
+    std::vector<uint64_t> ().swap(data_);
   }
 
 };

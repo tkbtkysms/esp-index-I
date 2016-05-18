@@ -101,6 +101,8 @@ void SearchQuery::CountQuery(ifstream &ifs, ifstream &pfs){
     }
     line.clear();
   }
+  esp_index_.Clear();
+
   
   cout << "total OCC" << sum_occ << endl;
   cout.precision(8);
@@ -204,9 +206,10 @@ void SearchQuery::LocateQuery(ifstream &ifs,ifstream &pfs){
     evidences_level_.clear();
 
   }
+
   
   cout << endl;
-  
+  esp_index_.Clear();
   cout << "Total OCC" << sum_occ << endl;
   cout.precision(8);
 
@@ -565,7 +568,7 @@ int SearchQuery::SearchRightEvidences(const uint64_t kVar ,const int kRemainingR
     return 1;
   }
   
-  uint height = evidences_level_[num_evidences_ - kRemainingRightLength];
+  uint32_t height = evidences_level_[num_evidences_ - kRemainingRightLength];
   
   if(height > 0){
     if(kVar < esp_index_.offset(height - 1)){
@@ -600,7 +603,7 @@ int SearchQuery::SearchLeftEvidences(const uint64_t kVar ,const int kRemainingLe
     return 1;
   }
   
-  uint height = evidences_level_[kRemainingLeftLength - 1];
+  uint32_t height = evidences_level_[kRemainingLeftLength - 1];
   
   if(height > 0){
     if(kVar < esp_index_.offset(height-1)){
@@ -636,7 +639,7 @@ int SearchQuery::LocateSearchLeftEvidences(const uint64_t kVar,
     return 1;
   }
   
-  uint height = evidences_level_[kRemainingLeftLength - 1];
+  uint32_t  height = evidences_level_[kRemainingLeftLength - 1];
   
   if(height > 0){
     if(kVar < esp_index_.offset(height - 1)){

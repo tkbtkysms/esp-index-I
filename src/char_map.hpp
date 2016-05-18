@@ -34,14 +34,14 @@ public:
   CharMap() : char_to_var_(CHARSIZE),
 	      var_to_char_(CHARSIZE),
 	      is_char_(),
-	      char_size_() {
-    is_char_ = new bool[CHARSIZE];
+	      char_size_(0) {}
+
+  void Init(){
+     is_char_ = new bool[CHARSIZE];
     for(size_t i = 0; i < CHARSIZE; i++){
       is_char_[i] = false;      
     }
-    char_size_ = 0;
   }
-  
   void SetChar(const char kChar){
     char_to_var_[(uint8_t)kChar] = char_size_;
     var_to_char_[char_size_] = kChar;
@@ -75,7 +75,7 @@ public:
   }
   
   void Save(std::ofstream &ofs){
-    ofs.write((char*)&char_to_var_[0], sizeof(uint64_t) * CHARSIZE);
+    ofs.write((char*)&char_to_var_[0], sizeof(uint8_t) * CHARSIZE);
     ofs.write((char*)&var_to_char_[0], sizeof(char) * CHARSIZE);
     ofs.write((char*)&is_char_[0], sizeof(bool) * CHARSIZE);
     ofs.write((char*)&char_size_, sizeof(uint64_t));
@@ -83,8 +83,9 @@ public:
   
   
   void Load(std::ifstream &ifs){
-    ifs.read((char*)&char_to_var_[0], sizeof(uint64_t) * CHARSIZE);
+    ifs.read((char*)&char_to_var_[0], sizeof(uint8_t) * CHARSIZE);
     ifs.read((char*)&var_to_char_[0], sizeof(char) * CHARSIZE);
+    Init();
     ifs.read((char*)&is_char_[0], sizeof(bool) * CHARSIZE);
     ifs.read((char*)&char_size_, sizeof(uint64_t));
   }
