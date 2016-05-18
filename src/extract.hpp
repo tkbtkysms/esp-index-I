@@ -33,6 +33,12 @@ private:
   uint64_t pos_;
   uint64_t num_pos_;
 public:
+  Extract(): esp_index_(),
+             len_(),
+             substr_(),
+             pos_(),
+             num_pos_(){}
+  ~Extract(){}
   void StartExtract(std::ifstream &ifso, std::ifstream &pfs);
   void RepeatExtract(const uint64_t node,const uint64_t st,const uint64_t ed);
   void RepeatAddChar(const uint64_t node);

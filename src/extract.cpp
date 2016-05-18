@@ -107,7 +107,6 @@ void Extract::RepeatExtract(const uint64_t node,const uint64_t start_pos, const 
   }
   else{    
     len_--;
-    cout << node << endl;
     substr_[num_pos_ - 1].append(1, esp_index_.GetVarToChar(node));
     pos_++;
   }

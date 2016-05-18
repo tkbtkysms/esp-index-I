@@ -209,6 +209,7 @@ void ESPTree::DiskBuild(ifstream &ifs, const uint64_t kInputSpace){
 			2);
 
     perm_index->Clear();
+    delete perm_index;
     rpdict_.Clear(pdict_);
     pdict_.SetOffset();
   }
