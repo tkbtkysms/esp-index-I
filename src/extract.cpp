@@ -88,7 +88,7 @@ void Extract::StartExtract(ifstream &ifs, ifstream &pfs){
 
 void Extract::RepeatExtract(const uint64_t node,const uint64_t start_pos, const uint64_t end_pos){
   uint64_t left,right, left_length;
-  if(node > CHARSIZE){
+  if(node >= CHARSIZE){
     left = esp_index_.left(node);
     right = esp_index_.right(node);
     if(left > CHARSIZE){
@@ -107,6 +107,7 @@ void Extract::RepeatExtract(const uint64_t node,const uint64_t start_pos, const 
   }
   else{    
     len_--;
+    cout << node << endl;
     substr_[num_pos_ - 1].append(1, esp_index_.GetVarToChar(node));
     pos_++;
   }
