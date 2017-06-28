@@ -7,7 +7,7 @@ Especially, long query search time of improved ESP-index is faster than other gr
 esp-index-I uses [RSDic](https://code.google.com/p/rsdic/) as a rank/select dictionary for a bit array
 and a self implementation as GMR.
 
-#Quick Start
+# Quick Start
     $cd esp-index-I/src  
     $make
 
@@ -33,7 +33,7 @@ To decompress an index to an input text, please use the below command.
 
     $./decompress -i index_file -o output_text_file
 
-#Options
+# Options
 ```
 usage: ./build-index --input_file=string --output_file=string [options] ... 
 options:
@@ -71,7 +71,7 @@ options:
   -?, --help           print this message
 ```
 
-#Refferences
+# Refferences
 [1] Yoshimasa Takabatake, Yasuo Tabei, Hiroshi Sakamoto: Improved ESP-index: A  
 Practical Self-index for Highly Repetitive Texts. SEA 2014: 338-350
 
