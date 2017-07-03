@@ -1,4 +1,4 @@
-/* search_query.cpp
+/* search_query.cppA
  * Copyright (C) 2015, Yoshimasa Takabatake, all rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -135,8 +135,9 @@ void SearchQuery::LocateQuery(ifstream &ifs,ifstream &pfs){
   query_.clear();
   line.clear();
 
+  
   while(getline(pfs,line)){
-    cout << "query" << num_query_ << " : ";
+    // cout << "query" << num_query_ << " : ";
     cflag = true;
     location_.push_back(vector<uint64_t>());
     num_query_++;
@@ -168,15 +169,15 @@ void SearchQuery::LocateQuery(ifstream &ifs,ifstream &pfs){
 	sum_traverse_tree_time += Gettime::get_time() - time;
     
 	sum_occ += occount_;
-        
 	if(occount_ != 0){
+	  std::sort(location_[num_query_-1].begin(), location_[num_query_-1].end());
 	  for(size_t i = 0; i < location_[num_query_-1].size();i++){
 	    cout << location_[num_query_-1][i] << " " ;
 	  }
           
-	  cout << endl;
-	  cout << "OCC: " << occount_ << endl; 
-	  cout << endl;
+	  	  cout << endl;
+	  //	  cout << "OCC: " << occount_ << endl; 
+	  //cout << endl;
 	}
 	else{
 	  cout << "This pattern does't exist" << endl;
@@ -208,14 +209,14 @@ void SearchQuery::LocateQuery(ifstream &ifs,ifstream &pfs){
   }
 
   
-  cout << endl;
+  //cout << endl;
   esp_index_.Clear();
-  cout << "Total OCC" << sum_occ << endl;
+  //cout << "Total OCC" << sum_occ << endl;
   cout.precision(8);
 
-  cout << "Location time : " << (sum_traverse_tree_time + sum_find_evidence_time)*1000 << "msec" << endl;
-  cout << "Location time/Character : " << (sum_traverse_tree_time + sum_find_evidence_time)/ sum_query_length*1000 << "msec" << endl;
-  cout << "Location time/Query : " << (sum_traverse_tree_time + sum_find_evidence_time)/num_query_*1000 << "msec" << endl; 
+  //cout << "Location time : " << (sum_traverse_tree_time + sum_find_evidence_time)*1000 << "msec" << endl;
+  // cout << "Location time/Character : " << (sum_traverse_tree_time + sum_find_evidence_time)/ sum_query_length*1000 << "msec" << endl;
+  //cout << "Location time/Query : " << (sum_traverse_tree_time + sum_find_evidence_time)/num_query_*1000 << "msec" << endl; 
 
 }
 
@@ -532,10 +533,12 @@ double SearchQuery::RepeatLocateQuery(const uint64_t kVar,
   }
 
   num_parent =  0;
-  
   while((parent_node = esp_index_.RightParent(kVar, num_parent)) != DUMMYCODE){   
     tmp_local_length = 0;
     if((consistent_length = LocateSearchLeftEvidences(esp_index_.left(parent_node), kRemainingLeftLength, &tmp_local_length)) != -1){
+      /*if(kRemainingLeftLength == 0 && esp_index_.left(parent_node)){
+	tmp_local_length += esp_index_.extraction_length(esp_index_.left(parent_node));
+	}*/
       if(((kRemainingLeftLength - consistent_length) == 0) 
 	 && (kRemainingRightLength == 0)){
 	time = Gettime::get_time();
@@ -554,7 +557,6 @@ double SearchQuery::RepeatLocateQuery(const uint64_t kVar,
     }
     num_parent++;
   }
-  
   return sum_time;
 }
 
@@ -629,9 +631,8 @@ int SearchQuery::SearchLeftEvidences(const uint64_t kVar ,const int kRemainingLe
 }
 
 int SearchQuery::LocateSearchLeftEvidences(const uint64_t kVar,
-				  const int kRemainingLeftLength, 
-				  uint64_t *local_length){
-  
+					   const int kRemainingLeftLength, 
+					   uint64_t *local_length){
   if(kRemainingLeftLength <= 0){
     return 0;
   }
@@ -700,25 +701,24 @@ void SearchQuery::Locate(const uint64_t kVar, const uint64_t kLocation){
     occount_++;
     location_[num_query_-1].push_back(kLocation);
   }
-  
-  uint64_t parent_node;
-  uint64_t num_parent = 0;
-  
-  uint64_t first_parent_left_bit_pos = esp_index_.FirstLeftParentBitPos(kVar);
-  if(first_parent_left_bit_pos != DUMMYCODE){
-    while((parent_node = esp_index_.LeftParent(kVar, first_parent_left_bit_pos, num_parent)) != DUMMYCODE){
-      Locate(parent_node, kLocation);
-      num_parent++;
+  else{
+    uint64_t parent_node;
+    uint64_t num_parent = 0;
+    uint64_t first_parent_left_bit_pos = esp_index_.FirstLeftParentBitPos(kVar);
+    if(first_parent_left_bit_pos != DUMMYCODE){
+      while((parent_node = esp_index_.LeftParent(kVar, first_parent_left_bit_pos, num_parent)) != DUMMYCODE){
+	Locate(parent_node, kLocation);
+	num_parent++;
+      }
     }
-  }
-  
-  num_parent =  0;
-  
-  while((parent_node = esp_index_.RightParent(kVar,num_parent)) != DUMMYCODE){
-    Locate(parent_node,
-	       kLocation 
-	       + esp_index_.extraction_length(esp_index_.left(parent_node)));
+    
+    num_parent =  0;
+    while((parent_node = esp_index_.RightParent(kVar,num_parent)) != DUMMYCODE){
+      Locate(parent_node,
+	     kLocation 
+	   + esp_index_.extraction_length(esp_index_.left(parent_node)));
     num_parent++;
+    }
   }
 }
 

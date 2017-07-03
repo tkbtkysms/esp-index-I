@@ -150,6 +150,7 @@ uint64_t ESPIndex::FirstLeftParentBitPos(const uint64_t kVar){
   if(kVar > left(num_prules() - 1)){
     return DUMMYCODE;
   }
+
   if(kVar == 0){
     if(left_.GetBit(0) == 1){
       return 0;
@@ -157,8 +158,7 @@ uint64_t ESPIndex::FirstLeftParentBitPos(const uint64_t kVar){
     else{
       return DUMMYCODE;
     }
-  }
-  else{
+  }else{
     return left_.Select(kVar - 1, 0) + 1;
   }
 }
@@ -166,7 +166,7 @@ uint64_t ESPIndex::FirstLeftParentBitPos(const uint64_t kVar){
 uint64_t ESPIndex::LeftParent(const uint64_t kVar,
 			      const uint64_t kFirstParentLeftBitPos,
 			      const uint64_t kParentNum){
- 
+  
   if(left_.GetBit(kFirstParentLeftBitPos + kParentNum) == 1){
     return  kFirstParentLeftBitPos + kParentNum - kVar + CHARSIZE; 
   }
@@ -228,7 +228,6 @@ uint64_t ESPIndex::offset(const size_t kHeight){
 }
 
 uint64_t ESPIndex::extraction_length(const size_t kVar){
-
   if(kVar < CHARSIZE){
     return 1;
   }

@@ -214,6 +214,15 @@ uint64_t GMR::Rank(const uint64_t kVar, const uint64_t kPos){
 }
 
 uint64_t GMR::Select(const uint64_t kVar, const uint64_t kPos){
+  if((kVar == 0) && (kPos > 0)){
+    if(b_.GetBit(0) == 1){
+      return DUMMYCODE;
+    }
+    uint64_t select2 = b_.Select(kVar + 1, 1);
+    if(kPos < select2 + 1){
+      return perm_.Access(kPos - 1);
+    }
+  }
   
   if((kVar <= max_var_) && (kPos > 0)){
     uint64_t select1 = b_.Select(kVar, 1);
@@ -222,7 +231,7 @@ uint64_t GMR::Select(const uint64_t kVar, const uint64_t kPos){
       return perm_.Access(select1 - kVar + kPos - 1);
     }
   }
-  return DUMMYCODE;;
+  return DUMMYCODE;
 }
 
 void GMR::Save(ofstream &ofs){
