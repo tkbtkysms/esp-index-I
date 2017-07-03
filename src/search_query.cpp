@@ -137,7 +137,7 @@ void SearchQuery::LocateQuery(ifstream &ifs,ifstream &pfs){
 
   
   while(getline(pfs,line)){
-    // cout << "query" << num_query_ << " : ";
+    cout << "query" << num_query_ << " : ";
     cflag = true;
     location_.push_back(vector<uint64_t>());
     num_query_++;
@@ -170,14 +170,13 @@ void SearchQuery::LocateQuery(ifstream &ifs,ifstream &pfs){
     
 	sum_occ += occount_;
 	if(occount_ != 0){
-	  std::sort(location_[num_query_-1].begin(), location_[num_query_-1].end());
 	  for(size_t i = 0; i < location_[num_query_-1].size();i++){
 	    cout << location_[num_query_-1][i] << " " ;
 	  }
           
-	  	  cout << endl;
-	  //	  cout << "OCC: " << occount_ << endl; 
-	  //cout << endl;
+	  cout << endl;
+	 cout << "OCC: " << occount_ << endl; 
+	 cout << endl;
 	}
 	else{
 	  cout << "This pattern does't exist" << endl;
@@ -209,14 +208,14 @@ void SearchQuery::LocateQuery(ifstream &ifs,ifstream &pfs){
   }
 
   
-  //cout << endl;
+  cout << endl;
   esp_index_.Clear();
-  //cout << "Total OCC" << sum_occ << endl;
+  cout << "Total OCC" << sum_occ << endl;
   cout.precision(8);
 
-  //cout << "Location time : " << (sum_traverse_tree_time + sum_find_evidence_time)*1000 << "msec" << endl;
-  // cout << "Location time/Character : " << (sum_traverse_tree_time + sum_find_evidence_time)/ sum_query_length*1000 << "msec" << endl;
-  //cout << "Location time/Query : " << (sum_traverse_tree_time + sum_find_evidence_time)/num_query_*1000 << "msec" << endl; 
+  cout << "Location time : " << (sum_traverse_tree_time + sum_find_evidence_time)*1000 << "msec" << endl;
+  cout << "Location time/Character : " << (sum_traverse_tree_time + sum_find_evidence_time)/ sum_query_length*1000 << "msec" << endl;
+  cout << "Location time/Query : " << (sum_traverse_tree_time + sum_find_evidence_time)/num_query_*1000 << "msec" << endl; 
 
 }
 
