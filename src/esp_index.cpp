@@ -124,7 +124,7 @@ void ESPIndex::BuildLeft(ESPTree &esp_tree){
 void ESPIndex::BuildRight(ESPTree &esp_tree){
   FFLCArray gmr_seq;
   uint64_t perm_skip_interval = floor(log2(floor(log2(num_prules())) + 1)) + 1;
-  gmr_seq.Init(num_prules(), num_prules());
+  gmr_seq.Init(num_prules() - CHARSIZE, num_prules());
   for(size_t i = CHARSIZE; i < num_prules(); i++){
     gmr_seq.Set(i - CHARSIZE, esp_tree.GetPRule(i).right_);
   }
@@ -168,7 +168,7 @@ uint64_t ESPIndex::LeftParent(const uint64_t kVar,
 			      const uint64_t kParentNum){
   
   if(left_.GetBit(kFirstParentLeftBitPos + kParentNum) == 1){
-    return  kFirstParentLeftBitPos + kParentNum - kVar + CHARSIZE; 
+    return kFirstParentLeftBitPos + kParentNum - kVar + CHARSIZE; 
   }
   else{
     return DUMMYCODE;

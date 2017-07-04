@@ -118,26 +118,17 @@ void GMR::BuildGMRBitArray(FFLCArray &fflca){
 
   uint64_t previous = fflca[perm_.Access(0)];
   RSDicBuilder bvb;
-  
-  for(size_t i = 0; i <= fflca[perm_.Access(0)];i++){
-    bvb.PushBack(1);
-  }
-  bvb.PushBack(0);
-  for(size_t i = 1; i < perm_.Length();i++){
-    if(previous == fflca[perm_.Access(i)]){
-      bvb.PushBack(0);
+  bvb.Clear();
+  previous = 0;
+  for(size_t i = 0; i < perm_.Length();i++){
+    for(size_t j = previous; j < fflca[perm_.Access(i)]; j++){
+      bvb.PushBack(false);
     }
-    else{
-      for(size_t j = previous; j < fflca[perm_.Access(i)]; j++){
-	bvb.PushBack(1);
-      }
-      bvb.PushBack(0);
-    }
+    bvb.PushBack(true);    
     previous = fflca[perm_.Access(i)];
   }
-  bvb.PushBack(1);
+  bvb.PushBack(false);
   bvb.Build(b_);
-
 }
 
 void GMR::Build(FFLCArray &fflca, const uint64_t kPermSkipInterval){
@@ -153,7 +144,7 @@ void GMR::Build(FFLCArray &fflca, const uint64_t kPermSkipInterval){
 uint64_t GMR::Access(const uint64_t kPos){
   if(kPos < perm_.Length()){
     uint64_t reverse_index = perm_.ReverseAccess(kPos);
-    return b_.Select(reverse_index, 0) - reverse_index - 1; 
+    return b_.Select(reverse_index, 1) - reverse_index; 
   }
   else{
     return DUMMYCODE;
@@ -166,12 +157,15 @@ uint64_t GMR::Rank(const uint64_t kVar, const uint64_t kPos){
     return 0;
   }
   else{
-    uint64_t select1 = b_.Select(kVar, 1);
-    uint64_t select2 = b_.Select(kVar + 1, 1);
+    uint64_t select1 = b_.Select(kVar - 1, 0);
+    if(kVar == 0){
+      select1 = 0;
+    }
+    uint64_t select2 = b_.Select(kVar, 0);
     
     if((select1 + 1) != select2){
-      uint64_t start = select1 - kVar;
-      uint64_t end = select2 - (kVar + 1) - 1;
+      uint64_t start = select1 - kVar + 1;
+      uint64_t end = select2 - (kVar + 1);
       uint64_t i = start;
       uint64_t j = end;
       uint64_t num = (j - i)/2 + start;
@@ -215,20 +209,19 @@ uint64_t GMR::Rank(const uint64_t kVar, const uint64_t kPos){
 
 uint64_t GMR::Select(const uint64_t kVar, const uint64_t kPos){
   if((kVar == 0) && (kPos > 0)){
-    if(b_.GetBit(0) == 1){
+    if(b_.GetBit(0) == 0){
       return DUMMYCODE;
-    }
-    uint64_t select2 = b_.Select(kVar + 1, 1);
-    if(kPos < select2 + 1){
+    }    
+    uint64_t select2 = b_.Select(kVar, 0);
+    if((kPos - 1) < select2){
       return perm_.Access(kPos - 1);
     }
   }
-  
-  if((kVar <= max_var_) && (kPos > 0)){
-    uint64_t select1 = b_.Select(kVar, 1);
-    uint64_t select2 = b_.Select(kVar + 1, 1);
+  else if((kVar <= max_var_) && (kPos > 0)){
+    uint64_t select1 = b_.Select(kVar - 1 , 0);
+    uint64_t select2 = b_.Select(kVar, 0);
     if(kPos < (select2 - select1)){
-      return perm_.Access(select1 - kVar + kPos - 1);
+      return perm_.Access(select1 - kVar + kPos);
     }
   }
   return DUMMYCODE;
