@@ -1,4 +1,4 @@
-/* search_query.cppA
+/* search_query.cpp
  * Copyright (C) 2015, Yoshimasa Takabatake, all rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -134,7 +134,6 @@ void SearchQuery::LocateQuery(ifstream &ifs,ifstream &pfs){
   query_.resize(1024);
   query_.clear();
   line.clear();
-
   
   while(getline(pfs,line)){
     cout << "query" << num_query_ << " : ";
@@ -170,7 +169,7 @@ void SearchQuery::LocateQuery(ifstream &ifs,ifstream &pfs){
     
 	sum_occ += occount_;
 	if(occount_ != 0){
-	  //std::sort(location_[num_query_ - 1].begin(), location_[num_query_ - 1].end());
+	  //	  std::sort(location_[num_query_-1].begin(), location_[num_query_-1].end());
 	  for(size_t i = 0; i < location_[num_query_-1].size();i++){
 	    cout << location_[num_query_-1][i] << " " ;
 	  }
@@ -188,7 +187,7 @@ void SearchQuery::LocateQuery(ifstream &ifs,ifstream &pfs){
     
       }
       else{
-	cout << "This pattern does't exist" << endl;
+	cout << "This pattern does't exist at findevidences" << endl;
 	cout << line << endl;
 	cout << endl;
 	cout << endl;
@@ -209,14 +208,14 @@ void SearchQuery::LocateQuery(ifstream &ifs,ifstream &pfs){
   }
 
   
-  //cout << endl;
+  cout << endl;
   esp_index_.Clear();
-  //  cout << "Total OCC" << sum_occ << endl;
+  cout << "Total OCC" << sum_occ << endl;
   cout.precision(8);
 
-  // cout << "Location time : " << (sum_traverse_tree_time + sum_find_evidence_time)*1000 << "msec" << endl;
-  //cout << "Location time/Character : " << (sum_traverse_tree_time + sum_find_evidence_time)/ sum_query_length*1000 << "msec" << endl;
-  //cout << "Location time/Query : " << (sum_traverse_tree_time + sum_find_evidence_time)/num_query_*1000 << "msec" << endl; 
+  cout << "Location time : " << (sum_traverse_tree_time + sum_find_evidence_time)*1000 << "msec" << endl;
+  cout << "Location time/Character : " << (sum_traverse_tree_time + sum_find_evidence_time)/ sum_query_length*1000 << "msec" << endl;
+  cout << "Location time/Query : " << (sum_traverse_tree_time + sum_find_evidence_time)/num_query_*1000 << "msec" << endl; 
 
 }
 
@@ -247,7 +246,7 @@ bool SearchQuery::FindEvidences(){
   }
   else{
     
-    while(ed > st + 4){
+    while(ed > (st + 4)){
       next_level_len_ = 0;
       pos_ = st;
       nextst = 0;
@@ -259,12 +258,11 @@ bool SearchQuery::FindEvidences(){
 	previous_ = DUMMYCODE;
       }	
       
-      while (ed > (pos_ + 4)){
+     while (ed > (pos_ + 4)){
 
-	if(IsFirstConsistency(st)){
-	  if(IsPair(query_,
-		    pos_,
-		    previous_)){
+       if(IsFirstConsistency(st)){
+	  if(Is2Tree(query_,
+		     pos_)){
 	    if(!PushEvidence(2, loop - 1)){
 	      return false;
 	    }
@@ -278,12 +276,11 @@ bool SearchQuery::FindEvidences(){
 	  }
 	  nextst = next_level_len_;
 	  break;
-	}
+       }
 	else{
-	  if(IsPair(query_,
-		    pos_,
-		    previous_)){
-	 
+	  if(Is2Tree(query_,
+		     pos_)){
+	    
 	    if(!PushEvidence(2, loop - 1)){
 	      return false;
 	    }
@@ -299,10 +296,9 @@ bool SearchQuery::FindEvidences(){
 	  }
 	}
       }
-      while(ed > (pos_ + 4)){
-	if(IsPair(query_,
-		  pos_,
-		  previous_)){
+     while (ed > (pos_ + 4)){
+	if(Is2Tree(query_,
+		   pos_)){
 	  Build2Tree();
 	}
 	else{
@@ -312,7 +308,7 @@ bool SearchQuery::FindEvidences(){
     
       if(ed >= pos_){
 	for(size_t i = ed; i >= pos_;i--){
-	  if(!IsExistingVar(suffix_evidences[i])){      
+	  if(!IsExistingVar(suffix_evidences[i])){
 	    return false;
 	  }
 	  suffix_evidences[num_suffix_evidences] = query_[i];
@@ -356,44 +352,66 @@ bool SearchQuery::FindEvidences(){
 }
 
 bool SearchQuery::IsFirstConsistency(const uint64_t kStartPos){
-  uint64_t code0 = (uint64_t)query_[pos_];
-  uint64_t code1 = (uint64_t)query_[pos_ + 1];
-  uint64_t code2 = (uint64_t)query_[pos_ + 2];
-  uint64_t code3 = (uint64_t)query_[pos_ + 3];
-  uint64_t code4 = (uint64_t)query_[pos_ + 4];
-  uint64_t code5 = (uint64_t)query_[pos_ + 5];
   if(pos_ > kStartPos){
-    if(IsRepetition(code0, code1)){
-      if(!IsRepetition(code1, code2) && !IsRepetition(code2, code3) && IsRepetition(code3, code4)){
-	return true;
-      }
-      if(IsRepetition(code1, code2)){
-	if(!IsRepetition(code2, code3) && !IsRepetition(code3, code4) && IsRepetition(code4, code5) ){
+    if(IsRepetition(query_, pos_)){
+      if(IsRepetition(query_, pos_ + 1)){//aaa...
+	if(!IsRepetition(query_, pos_ + 2)
+	   && !IsRepetition(query_, pos_ + 3) 
+	   && IsRepetition(query_, pos_ + 4)){//aaabcc
 	  return true;
 	}
-	else if(IsRepetition(code2, code3)){
+	else if(IsRepetition(query_, pos_ + 2)){//aaaa.. 
 	  return false;
 	}
+	return true;  // other aaa...
+      }
+      else if(!IsRepetition(query_, pos_ + 2)
+	      && IsRepetition(query_, pos_ + 3)){//aacbb.
 	return true;
       }
+      else{//other aa.....
+	return true;
+      }
+    }
+    if(IsRepetition(query_, pos_ + 1)){//baa..
+      if(IsRepetition(query_, pos_ + 2)){
+	if(!IsRepetition(query_, pos_ + 3)){//baaacd 
+	  return false;
+	}
+      }
+      else if(!IsRepetition(query_, pos_ + 3)
+	      && IsRepetition(query_, pos_ + 4)){//baacdd
+	return false;
+      }
+      else{
+	return true;
+      }
+    }
+    if(IsRepetition(query_, pos_ + 2)){//bcaa..
       return true;
-    }  
-    if(IsRepetition(code2, code3)){
+    }
+    if(IsRepetition(query_, pos_ + 3)){//bcdaa.
+      return true; 
+    }
+    if(IsRepetition(query_, pos_ + 4)){//bcdeaa
       return false;
     }
-    if(IsRepetition(code3, code4)){
-      return true;
-    }
-    if(IsRepetition(code4, code5)){
-      return false;
-    }
-  }
-  if(pos_ > (kStartPos + 4)){
-    if(IsMinimal(previous_, code0, code1) || IsMaximal(query_, pos_, previous_)){
-      return true;
-    }
-    if(IsMinimal(code0, code1, code1) || IsMaximal(query_, pos_ + 1, query_[pos_])){
-      return true;
+    if(pos_ > (kStartPos + 2)){
+      if(IsMaximal(query_, pos_ + 1)){
+	return true;
+      }
+      if(IsMaximal(query_, pos_)){
+	return true;
+      }
+      if(IsMaximal(query_, pos_ + 2)){
+	return false;
+      }
+      if(IsMinimal(query_, pos_ + 1)){
+	return true;
+      }
+      if(IsMinimal(query_, pos_)){
+	return true;
+      }
     }
   }
   return false;
@@ -420,7 +438,7 @@ bool SearchQuery::PushEvidence(const uint64_t kNum, const uint64_t kLevel){
 void SearchQuery::Build2Tree(){
   
   uint64_t var,right;
-  var = esp_index_.ReverseAccessToPRule(query_[pos_], 
+  var = esp_index_.ReverseAccessToPRule(query_[pos_],
 					(right  = query_[pos_ + 1]));
   query_[next_level_len_++] = var;
   previous_ = right;
@@ -693,7 +711,6 @@ void SearchQuery::CountOcc(const uint64_t kVar){
 }
 
 void SearchQuery::Locate(const uint64_t kVar, const uint64_t kLocation){
-  
   if(kVar == esp_index_.root()){
     occount_++;
     location_[num_query_-1].push_back(kLocation);
@@ -708,7 +725,6 @@ void SearchQuery::Locate(const uint64_t kVar, const uint64_t kLocation){
 	num_parent++;
       }
     }
-    
     num_parent =  0;
     while((parent_node = esp_index_.RightParent(kVar,num_parent)) != DUMMYCODE){
       Locate(parent_node,

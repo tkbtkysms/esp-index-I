@@ -192,11 +192,21 @@ uint64_t ESPIndex::ReverseAccessToPRule(const uint64_t kLeft,const uint64_t kRig
   uint64_t rank1;
   uint64_t left_hand_side;
   if(kLeft != 0){
-    rank1 = left_.Select(kLeft - 1, 0) - kLeft + 1;
-    left_hand_side = right_.Select(kRight, right_.Rank(kRight, rank1) + 1);
+        rank1 = left_.Select(kLeft - 1, 0) - kLeft + 1;
+	/*cout << "rank1: " << rank1 << endl;
+    cout << left(rank1 + CHARSIZE - 1) << endl;
+    cout << left(rank1 + CHARSIZE) << endl;
+    cout << left(rank1 + CHARSIZE + 1) << endl;
+    cout << "left hand side: " <<  rank1 + CHARSIZE << endl;
+    cout << right_.Rank(kRight, rank1) << endl;
+    cout << "kRight: " << kRight << endl;*/
+    left_hand_side = right_.Select(kRight,
+				   right_.Rank(kRight, rank1) + 1);
+    //    cout << "left hand side: " <<  left_hand_side + CHARSIZE << endl;
   }
   else{
     left_hand_side = right_.Select(kRight, 1);
+    //cout << "left" << left_hand_side << endl;
   }
   if(left_hand_side <= (left_.Select(kLeft, 0) - kLeft)){
     return left_hand_side + CHARSIZE;

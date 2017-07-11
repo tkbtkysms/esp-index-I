@@ -52,9 +52,8 @@ void ESPTree::Build(ifstream &ifs){
     next_level_len_ = 0;
     
     while(remaining_len_ > 5){
-      if(IsPair(input_buffer_, 
-		input_buffer_pos_,
-		previous_)){
+      if(Is2Tree(input_buffer_, 
+		input_buffer_pos_)){
 	Build2Tree();
       }
       else{
@@ -149,9 +148,8 @@ void ESPTree::DiskBuild(ifstream &ifs, const uint64_t kInputSpace){
       
       
       while(remaining_len_ > 5){
-	if(IsPair(input_buffer_, 
-		  input_buffer_pos_,
-		  previous_)){
+	if(Is2Tree(input_buffer_, 
+		  input_buffer_pos_)){
 	  Build2Tree();
 	}
 	else{

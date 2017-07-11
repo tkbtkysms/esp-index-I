@@ -157,14 +157,13 @@ uint64_t GMR::Rank(const uint64_t kVar, const uint64_t kPos){
     return 0;
   }
   else{
-    uint64_t select1 = b_.Select(kVar - 1, 0);
-    if(kVar == 0){
-      select1 = 0;
+    uint64_t select1 = 0;
+    if(kVar != 0){
+      select1 = b_.Select(kVar - 1, 0) + 1;
     }
     uint64_t select2 = b_.Select(kVar, 0);
-    
-    if((select1 + 1) != select2){
-      uint64_t start = select1 - kVar + 1;
+    if(select1 != select2){
+      uint64_t start = select1 - kVar;
       uint64_t end = select2 - (kVar + 1);
       uint64_t i = start;
       uint64_t j = end;
